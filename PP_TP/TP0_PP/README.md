@@ -29,9 +29,9 @@ Remarques :
 alphabétique les clés du JSON, c'est pourquoi on a ajouté **app.json.sort_keys = False** dans l'application flask
 pour conserver l'ordre original et assuré plus de cohérence.
 
-    - concernant **GET** ou **PUT**, nous avons remarqué que si deux individus avaient un même
+- concernant **GET** ou **PUT**, nous avons remarqué que si deux individus avaient un même
 id, GET (et notamment PUT) ne prenant en considération que le premier des deux.
 Cela est dû au fait que **next()** s'arrête dès qu'il trouve une correspondance trouvée
 
-    - **Gitignore** : lors de la synchronisation du dossier avec Gitlab, nous avons ignoré les fichiers lourds comme .venv et .idea
+- **Gitignore** : lors de la synchronisation du dossier avec Gitlab, nous avons ignoré les fichiers lourds comme .venv et .idea
 en les ajoutant dans le fichier .gitignore

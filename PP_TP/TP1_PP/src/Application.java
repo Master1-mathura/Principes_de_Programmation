@@ -9,5 +9,6 @@ public class Application {
         System.out.println("Le service web est déployé");
     }
 }
-//http://localhost:8888/?wsdl pour web service definition language c'est un fichier xml
+
+// http://localhost:8888/?wsdl pour web service definition language c'est un fichier xml
 // localhost:8888/?xsd=1
