@@ -15,7 +15,7 @@ Le projet est composé des classes suivantes :
 - **MonserviceWeb.java** : la classe de service utilise les annotations :
     - @WebService : Indispensable pour exposer la classe comme un service web
     - targetNamespace : Définit l'espace de nommage pour distinguer le service à l'extérieur
-    - @WebMethod(operationName = "...") : Permet de renommer l'opération dans le fichier WSDL
+    - `@WebMethod`(operationName = "...")' : Permet de renommer l'opération dans le fichier WSDL
     - @WebParam(name = "...") : Permet de personnaliser le nom des arguments dans les messages SOAP
 
 - **Etudiant.java** : Le modèle de données. Pour échanger des objets complexes entre le client et le serveur :
