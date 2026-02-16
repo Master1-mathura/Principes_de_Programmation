@@ -1,6 +1,6 @@
 # Notes de Cours :
 
-Ce document synthétise les notes de cours (CM1 du 16/01) portant sur les architectures logicielles, les systèmes distribués, la conteneurisation et les protocoles de communication.
+CM1 du 16/01 : Les architectures logicielles, les systèmes distribués, la conteneurisation et les protocoles de communication.
 
 ## 1. Concepts Fondamentaux du Développement
 
