@@ -10,4 +10,8 @@ $students = StudentService::getAllStudents();
 
 # Le contrôleur passe le relais à la Vue pour l'affichage :
 require_once "views/students.php";
+
+
+# N.B : À l'adresse http://localhost:8000/exo6.php on a un affichage nettement plus stylisé et propre, avec une animation.
 ?>
+

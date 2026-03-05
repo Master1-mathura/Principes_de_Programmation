@@ -79,3 +79,5 @@ def delete_student(id):
 # Activer mode Debug pour voir les erreurs et recharger automatiquement le serveur, TOUJOURS lancer le serveur en dernier
 if __name__ == '__main__':
     app.run(debug=True) #le port n'étant pas précisé, il est par défaut le 5000
+
+# pour lancer le serveur, il faut lancer la commande : python3 serveur_student.py
