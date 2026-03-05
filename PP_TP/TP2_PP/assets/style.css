@@ -1,23 +1,56 @@
+/* Palette de couleurs et réinitialisation douce */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    padding: 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #fdfaf5; /* Beige très clair */
+    color: #5d544b;            /* Brun doux pour le texte */
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    margin: 0;
 }
 
 h1 {
-    color: #333;
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
 }
 
-ul {
-    background: white;
-    padding: 15px;
-    border-radius: 5px;
-    width: 300px;
-    /* Bonus : ajout d'une ombre pour le relief */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* Conteneur principal */
+.student-list {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    width: 320px;
+    box-shadow: 0 10px 25px rgba(93, 84, 75, 0.05); /* Ombre très diffuse */
+    list-style: none;
 }
 
-li {
-    margin-bottom: 8px;
-    list-style-type: none; /* Enlève les puces par défaut */
+/* Éléments de la liste */
+.student-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f9f7f2;
+    transition: all 0.3s ease; /* Animation fluide */
+    cursor: default;
+}
+
+/* Animation au survol */
+.student-item:hover {
+    transform: translateX(8px); /* Petit décalage vers la droite */
+    background-color: #f2eee5;   /* Beige un peu plus sombre */
+    color: #2c2926;
+}
+
+/* Style des détails */
+.name {
+    font-weight: 500;
+}
+
+.age {
+    font-size: 0.9em;
+    opacity: 0.7;
 }
