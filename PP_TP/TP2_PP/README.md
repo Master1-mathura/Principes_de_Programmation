@@ -2,6 +2,17 @@ Pour ce TP2, nous allons reprendre le serveur du TP0 (serveur_student) mais chan
 
 Le client fait une requête HTTP au serveur Python, reçoit en réponse le JSON et le décode pour en prendre les données et en fait une page HTML lisible par l'utilisateur.
 
+# Exercice 1 : Connexion à l'API, affichage du texte brut
+
+Les données envoyées par le serveur Python sont au format JSON (une longue chaîne de caractères). PHP ne peut pas manipuler ces données directement comme s'il s'agissait de variables classiques.
+
+# Exercice 2 : Traitement des données
+
+Utilisation de `file_get_contents($url)` pour récupérer le contenu de l'API, puis de `json_decode($response, true)` pour transformer cette chaîne en un tableau associatif que l'on pourra donc parcourir comme on veut, car chaque élément du tableau a une clé spécifique. Avec cette clé, on peut afficher/extraire les informations que l'on souhaite dans l'ordre que l'on souhaite.
+
+# Exercice 3 : Automatisation de l'affichage
+
+Une fois le tableau récupéré, il contient une liste complète d'étudiants. Il faut pouvoir accéder aux informations de chaque étudiant individuellement pour les traiter. Donc dans l'exo3, on met en place une boucle foreach (`$students as $student`) pour parcourir le tableau et extraire les clés spécifiques comme ['name'] (ou ['prenom']) et ['age'].
 
 # Exercice 4 : Centralisation de la Configuration
 
