@@ -26,6 +26,6 @@ Le serveur écoute les requêtes sur le port local `5001`. Selon les routes déf
   4. La requête `SELECT * FROM students` a été exécutée.
   5. Le résultat (vide, car nous n'avons pas encore inséré de données) a été renvoyé et transformé en format JSON pour le navigateur.
 
-Ceci étant fait, nous avons ajouté des fonctions pour compléter notre système avec les opérations classiques : rechare par id, ajout, suppression et modification. Nous les avons intégrés dans le fichier `repository.py` avec notamment des `conn.commit()` pour valider l'enregistrement.
+Ceci étant fait, nous avons ajouté des fonctions pour compléter notre système avec les opérations classiques : recherche par id, ajout, suppression et modification. Nous les avons intégrés dans le fichier `repository.py` avec notamment des `conn.commit()` pour valider l'enregistrement.
 
 Enfin, nous avons créé un script `test.py` pour simuler l'ajout, la modification et la suppression d'un étudiant. Cela nous a permis de vérifier que la communication avec MySQL est bien fonctionnelle.
