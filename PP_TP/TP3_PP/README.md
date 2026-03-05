@@ -18,8 +18,8 @@ Nous avons ensuité créé 4 fichiers :
 Une fois ces fichiers créés et configurés, nous avons lancé le serveur Flask via le terminal avec la commande `python3 app.py`. 
 Le serveur écoute les requêtes sur le port local `5001`. Selon les routes définies, on obtient différents affichages :
 
-* **Sur la racine** (`http://localhost:5001/`) : Le navigateur affiche le texte brut `"C'est cool REST !"`. Donc le serveur web Flask fonctionne et écoute nos requêtes.
-* **Sur la route des étudiants** (`http://localhost:5001/students`) : Le navigateur affiche `[]`. Il s'agit d'un tableau JSON vide. Voici ce qu'il se passe concrètement :
+* **Sur la racine** (http://localhost:5001/) : Le navigateur affiche le texte brut `"C'est cool REST !"`. Donc le serveur web Flask fonctionne et écoute nos requêtes.
+* **Sur la route des étudiants** (http://localhost:5001/students) : Le navigateur affiche `[]`. Il s'agit d'un tableau JSON vide. Voici ce qu'il se passe concrètement :
   1. `app.py` a reçu la requête HTTP GET.
   2. Il a appelé la fonction de `repository.py`.
   3. Le repository a utilisé `db.py` et `config.py` pour ouvrir une connexion à MySQL.

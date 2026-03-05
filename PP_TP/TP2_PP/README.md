@@ -16,11 +16,11 @@ Une fois le tableau récupéré, il contient une liste complète d'étudiants. I
 
 # Exercice 4 : Centralisation de la Configuration
 
-Dans les exercices précédents, l'URL de l'API Flask (`http://127.0.0.1:5000/students`) était écrite en haut de chaque fichier PHP. 
+Dans les exercices précédents, l'URL de l'API Flask (http://127.0.0.1:5000/students) était écrite en haut de chaque fichier PHP. 
 Donc si notre serveur Python venait à changer de port, il faudrait ouvrir et modifier manuellement chaque fichier PHP.
 Pour corriger cela, nous devons respecter un principe fondamental en développement : **ne jamais mélanger la logique métier et la configuration**.
 
-* **La Configuration :** Ce sont les variables liées à l'environnement d'exécution (serveurs, adresses IP, ports, mots de passe). Ici, c'est l'URL d'accès à l'API (`$url ="http://127.0.0.1:5000/students";`).
+* **La Configuration :** Ce sont les variables liées à l'environnement d'exécution (serveurs, adresses IP, ports, mots de passe). Ici, c'est l'URL d'accès à l'API (`$url ="`http://127.0.0.1:5000/students`";`).
 * **La Logique Métier :** C'est le fait d'appeler l'API, de décoder le JSON (`json_decode`) et d'afficher le résultat pour l'utilisateur (`foreach`). Cette logique ne change jamais, quelle que soit l'adresse du serveur.
 
 Dans l'exo4, on a donc restructuré le projet comme suit :
