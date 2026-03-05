@@ -10,7 +10,7 @@ Nous avons ensuité créé 4 fichiers :
 
 2. `db.py` : utilise la configuration pour ouvrir concrètement le "tuyau" vers MySQL.
 
-3. `repository.py` : c'est ici que l'on place nos requêtes SQL. Ce fichier demande la connexion, va chercher les étudiants dans la table, et transforme le résultat en dictionnaire grâce à `dictionary=True`.
+3. `repository.py` (c'est le DAO): c'est ici que l'on place nos requêtes SQL. Ce fichier demande la connexion, va chercher les étudiants dans la table, et transforme le résultat en dictionnaire grâce à `dictionary=True`.
 
 4. `app.py` : utilise le framework Flask et crée les "routes" (les URL) que l'on pourra visiter sur le navigateur.
 
