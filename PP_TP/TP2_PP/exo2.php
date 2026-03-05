@@ -6,7 +6,7 @@ $url = "http://127.0.0.1:5000/students";
 $response = file_get_contents($url);
 
 # On désérialise le contenu :
-$students = json_decode($response, true);
+$students = json_decode($response, true); # True force un tableau associatif
 
 echo "<pre>";
 echo"<h3>Réponse décodée du serveur Python :</h3>";
