@@ -252,3 +252,178 @@ docker run -d -p 8080:80 -v $(pwd):/usr/share/nginx/html --name monNouveauServeu
 ```
 * `-v $(pwd):/usr/share/nginx/html` : Dit à Docker "Prends le dossier courant (`pwd`) et monte-le à la place du dossier `/usr/share/nginx/html` du conteneur". 
 Ainsi, si on modifie le fichier depuis notre machine ou si le conteneur est supprimé, les données restent en sécurité en local !
+
+# CM du 03/04 :
+
+## 10. Persistance des Données : Les Volumes
+
+Par défaut, un conteneur possède un système de fichiers éphémère. Si on supprime et redémarre un conteneur, toutes les modifications et données créées à l'intérieur sont détruites. Pour conserver ces données (ex: une base de données), il faut les externaliser sur la machine hôte.
+
+Il existe 3 principales façons de gérer la persistance dans Docker :
+
+### 1. Lancer un serveur Nginx avec Mapping de port
+
+**Bind Mounts** (Montage de répertoires de l'hôte)
+
+- **Principe** : On lie un répertoire spécifique et visible de la machine hôte directement dans le conteneur. Tout changement de l'un se reflète en temps réel dans l'autre.
+
+- **Avantages** : Très flexible, idéal pour le développement (le code modifié sur la machine hôte est immédiatement pris en compte par le conteneur).
+
+- **Inconvénients** : Dépendant du système de fichiers de l'hôte, peut poser des risques de sécurité si mal configuré.
+
+- **Syntaxe** : On utilise le flag -v (qui remplace la logique du -p pour les ports) en précisant le chemin absolu de l'hôte vers le chemin du conteneur.
+
+```bash
+# Exemple : Tout changement dans le dossier projets se reflète dans /app
+docker run -it -v /home/user/projets:/app alpine sh
+```
+
+### 2. Volumes gérés par Docker (Named Volumes)
+
+- **Principe** : C'est Docker qui gère lui-même le stockage. Les données sont stockées dans une zone sécurisée de l'hôte (généralement /var/lib/docker/volumes/).
+
+- **Avantages** : Indépendants du système de fichiers hôte, beaucoup plus sûrs, et faciles à sauvegarder/migrer. C'est la méthode recommandée en production.
+
+- **Commandes utiles :**
+
+`docker volume create monVolume` : Créer un volume.
+
+`docker volume ls` : Lister les volumes existants.
+
+`docker volume rm monVolume` : Supprimer un volume.
+
+*Exemple 1 : Partage de données entre deux conteneurs*
+```bash
+# 1. Création du volume
+docker volume create monVolume
+
+# 2. Lancement d'un 1er conteneur avec ce volume et écriture d'un fichier
+docker run -it -v monVolume:/data alpine sh
+/ # echo "Bonjour tout le monde" >> /data/bjrtlm.txt
+/ # exit
+
+# 3. Lancement d'un 2ème conteneur sur le MÊME volume
+docker run -it --name monDeuxiemeConteneur -v monVolume:/data alpine sh
+/ # cat /data/bjrtlm.txt
+# Résultat : Affiche "Bonjour tout le monde". Les données ont survécu et sont partagées !
+```
+
+*Exemple 2 : Persister une base de données MySQL*
+```bash
+docker volume create mysql_data
+# Lancement de MySQL en liant le volume au dossier où MySQL stocke ses données en interne
+docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=pass -v mysql_data:/var/lib/mysql mysql:latest
+```
+
+### 3. Tmpfs (Stockage en mémoire RAM)
+- **Principe** : Les données sont stockées temporairement dans la mémoire vive (RAM) et ne laissent aucune trace sur le disque dur.
+
+- **Critères** : Dans la hiérarchie de la mémoire (Cache > RAM > Disque dur), plus on monte, plus les performances augmentent, mais le coût aussi.
+
+- **Avantages** : Extrêmement rapide.
+
+- **Cas d'usage** : Utile si la préoccupation première est la performance absolue et non la persistance (ex: Base de données "in-memory" comme H2, génération de liens valables 24h qui disparaissent au redémarrage).
+
+Syntaxe :
+```bash
+docker run --tmpfs /chemin_dans_conteneur nom_image
+```
+
+## 11. Gestion des Réseaux (Networking)
+
+Les réseaux permettent aux conteneurs de communiquer entre eux ou avec l'extérieur de manière sécurisée.
+
+Lister les réseaux : `docker network ls`
+
+1. **Le réseau par défaut : bridge**
+Quand on lance un conteneur sans spécifier de réseau, Docker le place dans le réseau bridge par défaut.
+
+Inspection : `docker network inspect bridge` (Affiche la liste des conteneurs qui l'utilisent).
+
+2. **Le réseau hôte : host**
+Principe : Docker n'attribue pas d'IP spécifique au conteneur. Il n'y a aucune isolation réseau. Le conteneur utilise directement le réseau de la machine hôte.
+
+Avantage : Pas besoin de mapper les ports (`-p`).
+```bash
+docker run --network host nginx
+```
+
+3. **Le réseau isolé : none**
+Principe : Le conteneur n'a aucune carte réseau, ni accès à internet, ni accès aux autres conteneurs. Il est totalement en quarantaine.
+
+Cas d'usage : Traitement de données ultra-sensibles, exécution de scripts non fiables.
+
+```bash
+docker run --network none -it alpine sh
+# Si on fait un "ping google.com" à l'intérieur, cela échouera (Network unreachable).
+```
+
+4. **Le réseau personnalisé** (User-Defined Bridge)
+Si l'on souhaite regrouper des conteneurs (ex: un serveur web et une API) pour qu'ils communiquent entre eux de manière sécurisée, on crée un réseau dédié.
+
+Avantage : Permet la résolution de noms (DNS). Les conteneurs peuvent se "ping" en utilisant leur nom (--name) au lieu de leur adresse IP.
+
+Création et utilisation :
+```bash
+# 1. Créer le réseau personnalisé
+docker network create monreseau
+
+# 2. Lancer des conteneurs dans ce réseau
+docker run -d --name site --network monreseau nginx
+docker run -d --name api --network monreseau alpine sleep 1000
+```
+
+Autres commandes de gestion :
+`docker network connect monreseau site` : Ajouter un conteneur existant à un réseau.
+`docker network disconnect monreseau site` : Retirer un conteneur d'un réseau.
+
+## 12. Automatisation avec le Dockerfile
+
+Jusqu'ici, la configuration des conteneurs (installation de paquets, création de fichiers) se faisait "à la main" en mode interactif.
+Le Dockerfile permet d'automatiser tout ce processus dans un fichier texte pour créer une image réutilisable, prête à être partagée (sur Docker Hub par exemple) et déployée sur n'importe quelle machine.
+
+Les Instructions Principales
+
+| Instruction | Rôle |
+| :--- | :--- |
+| **FROM**| Choisir l'image de base (doit toujours être la première instruction). |
+| **RUN** | Exécuter une commande à l'intérieur de l'image (ex: apk add curl) lors de sa construction. |
+| **COPY** | Copier un fichier ou dossier de la machine hôte locale vers l'image. |
+| **WORKDIR / SOAP** | Définir le dossier de travail par défaut à l'intérieur de l'image. |
+| **EXPOSE** | Documenter le port exposé par l'application (informatif). |
+| **CMD / ENTRYPOINT** | La commande qui sera lancée au démarrage du conteneur. |
+
+*Exemple 1 : Image Alpine simple*
+Création d'une image qui affiche un message au démarrage.
+
+Fichier Dockerfile :
+```bash
+# Utilise une image Alpine légère
+FROM alpine:latest
+
+# Définit la commande exécutée au démarrage du conteneur
+CMD echo "Bonjour Polytech Nancy"
+```
+Construction (Build) et Exécution :
+```bash
+# L'option -t permet de nommer (tagger) l'image. 
+# Le "." indique à Docker de chercher le Dockerfile dans le répertoire courant.
+docker build -t mon-app .
+
+# Lancement du conteneur basé sur notre nouvelle image
+docker run mon-app
+```
+*Exemple 2 : Application Java (Multi-Stage Build)*
+Si nous voulons exécuter une application Java, il serait mauvais d'intégrer le code source (Hello.java) et le compilateur (javac) dans l'image finale destinée à la production, car cela l'alourdirait inutilement. On utilise alors des étapes (Multi-stage) : une pour compiler, une pour exécuter.
+
+Code Java (Hello.java) :
+```bash
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Bonjour Polytech Nancy");
+    }
+}
+```
+
+## 13. Introduction à Docker Compose (Orchestration simple)
+
