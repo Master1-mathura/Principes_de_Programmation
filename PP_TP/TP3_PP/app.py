@@ -17,4 +17,4 @@ def get_students():
 # Lancer le serveur
 # Force Flask à écouter sur toutes les interfaces (IPv4 + IPv6) :
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

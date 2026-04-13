@@ -417,7 +417,7 @@ docker run mon-app
 Si nous voulons exécuter une application Java, il serait mauvais d'intégrer le code source (Hello.java) et le compilateur (javac) dans l'image finale destinée à la production, car cela l'alourdirait inutilement. On utilise alors des étapes (Multi-stage) : une pour compiler, une pour exécuter.
 
 Code Java (Hello.java) :
-```bash
+```java
 public class Hello {
     public static void main(String[] args) {
         System.out.println("Bonjour Polytech Nancy");

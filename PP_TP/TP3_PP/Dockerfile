@@ -7,6 +7,8 @@ RUN pip install flask mysql-connector-python
 
 COPY . /app/
 
-EXPOSE 5001
+EXPOSE 5000
 
 CMD ["python", "app.py"]
+
+# lignes de commandes : `docker build -t mon-app .` suivi de : `docker run -p 4900:5000 mon-app`
