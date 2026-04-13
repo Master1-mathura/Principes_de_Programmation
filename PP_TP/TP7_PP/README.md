@@ -41,7 +41,7 @@ Le menu (v, o, w, d) apparait :
 
 - o (View Config) : Affiche le fichier de configuration final que Docker a compris.
 
-*Il faut appuyer simplement sur d pour récupérer la main sur ton terminal*
+*Il faut appuyer simplement sur d pour récupérer la main sur le terminal*
 
 2) Vérifier le résultat : Ouvrir le navigateur sur http://localhost:5002.
 3) Arrêter tout : Ctrl + C puis docker compose down.
@@ -62,5 +62,5 @@ TP7_PP/
 ```
 
 Remarque :
-A la suite d'une erreur dans requirements.txt, j'aimodifié les dépendances, donc j'ai dû dire à Docker Compose de forcer la reconstruction de l'image (sinon il risque de reprendre l'ancienne version buggée en mémoire) :
+A la suite d'une erreur dans requirements.txt, j'ai modifié les dépendances, donc j'ai dû dire à Docker Compose de forcer la reconstruction de l'image (sinon il risque de reprendre l'ancienne version buggée en mémoire) :
 `docker compose up --build`.
