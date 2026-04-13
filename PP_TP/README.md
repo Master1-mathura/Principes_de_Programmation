@@ -433,6 +433,8 @@ Pour qu'une application puisse "passer à l'échelle" (scalabilité), elle doit 
 * **Le défi :** Lors d'un pic d'utilisation, le système doit anticiper et démarrer de nouvelles instances (conteneurs) très rapidement.
 * **La solution :** Les images Docker doivent être les plus légères possibles. Une image trop lourde mettra trop de temps à se télécharger et à s'instancier, ralentissant la réponse au pic de charge.
 
+*L'image Docker doit être la plus légère possible (d'où l'utilisation de versions slim ou alpine). Une image lourde met trop de temps à se télécharger et à démarrer.
+*
 ## 15. Frameworks et ORM (Object Relational Mapping)
 
 * **Rappel Flask :** Flask est un framework. Sans lui, il faudrait écrire toute la logique de routage HTTP à la main.
@@ -442,8 +444,8 @@ Pour qu'une application puisse "passer à l'échelle" (scalabilité), elle doit 
 
 ## 16. Limites du Dockerfile et Introduction à Docker Compose
 
-* **Le Dockerfile :** Conçu pour exécuter **une seule application / un seul service** à la fois. Si ton API REST (ex: `app.py`) a besoin d'une base de données, un Dockerfile seul ne suffit pas.
-* **Docker Compose :** L'outil d'orchestration standard pour les environnements multi-services.
+* **Le Dockerfile :** Conçu pour exécuter **une seule application / un seul service** à la fois. Si l'API REST (ex: `app.py`) a besoin d'une base de données, un Dockerfile seul ne suffit pas.
+* **Docker Compose :** L'outil standard pour les environnements multi-services *(ex: une API REST + une Base de données)*. Il permet de démarrer l'ensemble et de les faire communiquer sur un réseau virtuel.
     * *Principe :* Décrit toute l'architecture d'un projet dans un seul fichier : `docker-compose.yml`.
     * *Avantages :*
         * Une seule commande pour tout démarrer : `docker compose up`.
