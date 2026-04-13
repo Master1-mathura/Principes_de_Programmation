@@ -1,5 +1,7 @@
 ## Création du fichier Dockerfile :
 
+Nous avons conteneurisé l'API du TP2 avec un Dockerfile et on l'a fait toçurner de manière isolée.
+
 ### L'API est empaquetée avec les instructions suivantes :
 1) Définition du dossier de travail dans le conteneur
 2) Installation du framework Flask
