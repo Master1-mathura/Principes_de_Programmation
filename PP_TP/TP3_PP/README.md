@@ -29,3 +29,14 @@ Le serveur écoute les requêtes sur le port local `5001`. Selon les routes déf
 Ceci étant fait, nous avons ajouté des fonctions pour compléter notre système avec les opérations classiques : recherche par id, ajout, suppression et modification. Nous les avons intégrés dans le fichier `repository.py` avec notamment des `conn.commit()` pour valider l'enregistrement.
 
 Enfin, nous avons créé un script `test.py` pour simuler l'ajout, la modification et la suppression d'un étudiant. Cela nous a permis de vérifier que la communication avec MySQL est bien fonctionnelle.
+
+# Pour aller plus loin : conteneurisation
+
+Un conteneur Docker est comme un ordinateur complètement vierge et isolé donc on peut rencontrer le problème de la connexion locale :
+Si l'API cherche à se connecter à une base MySQL qui tourne sur le Mac (via localhost), elle plantera. Pour le conteneur, localhost désigne l'intérieur de sa propre boîte, il n'y trouvera donc pas le serveur MySQL du Mac.
+
+Pour cela, il faut explicitement dire au conteneur d'installer les outils de communication avec la base de données dans le Dockerfile :
+
+`RUN pip install flask mysql-connector-python`
+
+La vraie solution reste néanmoins le Docker Compose pour lancer l'API et la base de données ensemble et les relier proprement.
