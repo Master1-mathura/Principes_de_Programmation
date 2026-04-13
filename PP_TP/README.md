@@ -425,5 +425,28 @@ public class Hello {
 }
 ```
 
-## 13. Introduction à Docker Compose (Orchestration simple)
+# CM du 10/04 :
 
+## 14. Scalabilité et Optimisation des Images
+
+Pour qu'une application puisse "passer à l'échelle" (scalabilité), elle doit garantir un temps d'exécution constant, quel que soit le nombre d'utilisateurs simultanés. 
+* **Le défi :** Lors d'un pic d'utilisation, le système doit anticiper et démarrer de nouvelles instances (conteneurs) très rapidement.
+* **La solution :** Les images Docker doivent être les plus légères possibles. Une image trop lourde mettra trop de temps à se télécharger et à s'instancier, ralentissant la réponse au pic de charge.
+
+## 15. Frameworks et ORM (Object Relational Mapping)
+
+* **Rappel Flask :** Flask est un framework. Sans lui, il faudrait écrire toute la logique de routage HTTP à la main.
+* **ORM (Object Relational Mapping) :** C'est un outil qui fait le pont entre la programmation orientée objet (Python, Java) et les bases de données relationnelles (SQL).
+    * *Principe :* On crée une Classe en Python, et l'ORM se charge de la sauvegarder dans la base de données.
+    * *Fonctionnement :* Utilise souvent des annotations (ex: `@Entity`, `@OneToOne`). C'est le framework qui gère automatiquement la couche d'accès aux données (DAL - Data Access Layer).
+
+## 16. Limites du Dockerfile et Introduction à Docker Compose
+
+* **Le Dockerfile :** Conçu pour exécuter **une seule application / un seul service** à la fois. Si ton API REST (ex: `app.py`) a besoin d'une base de données, un Dockerfile seul ne suffit pas.
+* **Docker Compose :** L'outil d'orchestration standard pour les environnements multi-services.
+    * *Principe :* Décrit toute l'architecture d'un projet dans un seul fichier : `docker-compose.yml`.
+    * *Avantages :*
+        * Une seule commande pour tout démarrer : `docker compose up`.
+        * Les conteneurs communiquent automatiquement entre eux via un réseau virtuel interne.
+        * Les configurations sont versionnées, reproductibles et partageables.
+        * Idéal pour lancer des stacks complètes (Base de données + API + Frontend + Cache).
