@@ -1,56 +1,22 @@
-# TP7 : Multi-Services avec Docker Compose
+# TP7 : Architecture Multi-Services avec Docker Compose
 
-Ce TP illustre comment déployer une architecture multi-services (Microservices) à l'aide de Docker Compose. Au lieu de gérer les conteneurs individuellement, nous utilisons un fichier YAML pour décrire l'ensemble de l'infrastructure.
+Ce TP illustre comment déployer une architecture multi-services (Microservices) à l'aide de Docker Compose. Au lieu de gérer les conteneurs individuellement, nous utilisons un fichier YAML pour orchestrer l'ensemble de l'infrastructure.
 
-**Docker Compose :** Outil permettant de décrire toute l'architecture dans un fichier `docker-compose.yml`. Une seule commande démarre tout.
+## Les avantages de Docker Compose
+Docker Compose est l'outil idéal pour lancer des applications nécessitant plusieurs briques (ex: BDD + API + Frontend + Cache). Il permet de :
+* **Décrire toute l'architecture** en un seul fichier central : `docker-compose.yml`.
+* **Démarrer tout l'environnement** avec une seule commande : `docker compose up`.
+* **Automatiser la communication** : les conteneurs communiquent naturellement entre eux via un réseau interne.
+* **Versionner et partager** : les configurations sont reproductibles et facilement partageables avec d'autres développeurs.
 
-**DNS Interne :** Les conteneurs communiquent automatiquement entre eux en utilisant leur nom de service (ex: le PHP appelle l'API via `http://product-service/`).
+## Architecture du projet
 
-**Dépendances :** L'instruction `depends_on` garantit que le site PHP ne démarrera que lorsque l'API Python sera prête.
+Le projet est divisé en plusieurs sous-répertoires, chacun représentant un service :
 
-* Service Web - Frontend
-Dans le dossier /website
-Dans le dossier website, crée un seul fichier nommé index.php.
-Ce fichier utilise file_get_contents('http://product-service/') pour interroger l'API. C'est la magie de Docker : le nom du service devient son adresse web locale.
-
-* Service API - Backend
-Dans le dossier /product.
-Ce dossier contient la logique métier de l'application répartie en trois fichiers :
-
-- api.py : Le script Python utilisant le framework Flask pour créer une API REST qui renvoie simplement une liste de produits au format JSON.
-- requirements.txt : Un fichier listant les bibliothèques externes nécessaires (Flask et Flask-RESTful) pour que Docker sache quoi installer.
-- Dockerfile (la recette de création de l'image) : Il utilise une image Python préconfigurée (3-onbuild) qui copie automatiquement le code, installe les dépendances listées, et lance le serveur.
-
-* Le Chef d'Orchestre
-Dans le fichier `docker-compose.yml` à la racine du TP7.
-C'est le fichier central qui définit les deux services (product-service et website) et gère trois aspects cruciaux :
-
-- **Le Build & les Images** : Il dit à Docker de construire l'image Python à partir du dossier product et de télécharger une image PHP/Apache officielle pour le dossier website.
-- **Les Ports** : Il fait le pont entre ton Mac et les conteneurs (ex: le port 5001 de ton ordinateur redirige vers l'API, et le 5002 vers le site PHP)
-- **Les Volumes** : Il lie tes dossiers locaux directement à l'intérieur des conteneurs. Ainsi, si tu modifies ton code, la mise à jour est immédiate sans avoir à tout reconstruire.
-
-Maintenant, il ne reste plus qu'à :
-1) Démarrer l'architecture : `docker compose up` (ou docker compose up -d pour l'arrière-plan) -> ça peut prendre un moment.
-
-Le menu (v, o, w, d) apparait : 
-- d (Detach) : le serveur va continuer à tourner silencieusement en arrière-plan.
-
-- v (View) : Ouvre l'interface graphique de Docker Desktop pour voir les conteneurs avec la souris.
-
-- w (Watch) : Active un mode où Docker surveille les fichiers et met à jour le conteneur en temps réel à chaque sauvegarde.
-
-- o (View Config) : Affiche le fichier de configuration final que Docker a compris.
-
-*Il faut appuyer simplement sur d pour récupérer la main sur le terminal*
-
-2) Vérifier le résultat : Ouvrir le navigateur sur http://localhost:5002.
-3) Arrêter tout : Ctrl + C puis docker compose down.
-
-On a ainsi l'arborescence suivante :
 ```text
-TP7_PP/
+TP7_PP/                      # Vous êtes ici
 │
-├── docker-compose.yml       # Fichier d'orchestration global
+├── docker-compose.yml       # Le "Chef d'Orchestre" (Fichier d'orchestration global)
 │
 ├── product/                 # Service 1 : Backend API (Python)
 │   ├── Dockerfile
@@ -61,6 +27,61 @@ TP7_PP/
     └── index.php
 ```
 
-Remarque :
-A la suite d'une erreur dans requirements.txt, j'ai modifié les dépendances, donc j'ai dû dire à Docker Compose de forcer la reconstruction de l'image (sinon il risque de reprendre l'ancienne version buggée en mémoire) :
-`docker compose up --build`.
+1.** Le Backend (Service API) : /product**
+Ce dossier contient la logique métier de l'application, propulsée par Python.
+   - **api.py **: Script utilisant le framework Flask pour créer une API REST qui renvoie une liste de produits au format JSON.
+  
+   - **requirements.txt** : Liste les dépendances externes (Flask et Flask-RESTful).
+
+   - **Dockerfile** : La recette de création de l'image. Il utilise une image de base Python préconfigurée (python:3-onbuild), copie le code, installe les dépendances et lance le serveur.
+
+2.** Le Frontend (Service Web) : /website**
+Ce dossier contient l'interface client.
+   - **index.php** : Invoque l'API REST en Python.
+
+   - **DNS interne** : Le fichier PHP utilise file_get_contents('http://product-service/'). Grâce à Docker Compose, le nom du service défini dans le YAML devient son adresse web locale, permettant aux conteneurs de se trouver sans connaître leurs adresses IP.
+
+3. **Le Chef d'Orchestre : docker-compose.yml**
+C'est lui qui définit nos deux services (product-service et website). Il gère trois aspects :
+   - Le Build & les Images : Il indique à Docker de construire l'image Python à partir du dossier /product et de récupérer une image officielle php:apache pour /website.
+
+   - Les Ports : Il fait le pont entre la machine hôte et les conteneurs (le port 5001 redirige vers l'API, et le 5002 vers le site PHP).
+
+   - Les Volumes : Il lie les dossiers locaux directement à l'intérieur des conteneurs. Si le code est modifié, la mise à jour est immédiate sans avoir à relancer le build.
+
+   - Les Dépendances : L'instruction depends_on garantit que le site PHP (website) ne démarrera que lorsque le backend (product-service) sera lancé, évitant ainsi les erreurs de connexion au démarrage.
+
+## Comment lancer le projet
+
+1. **Démarrer l'architecture**
+À la racine du projet (là où se trouve le docker-compose.yml), il faut exécuter :
+```bash
+docker compose up
+```
+***Remarque***: *pour lancer en arrière-plan, ajoute l'option -d pour "detach".*
+
+2. **Tester l'application**
+Ouvrir le navigateur sur : http://localhost:5002
+
+1. **Gérer l'exécution (Menu interactif)**
+Lors d'une exécution classique, un menu interactif est disponible dans le terminal :
+
+- d (Detach) : Bascule le serveur en arrière-plan pour récupérer la main sur le terminal.
+
+- v (View) : Ouvre l'interface graphique de Docker Desktop.
+
+- w (Watch) : Active la surveillance des fichiers pour une mise à jour en temps réel à chaque sauvegarde.
+
+- o (View Config) : Affiche la configuration finale interprétée par Docker.
+
+4. **Tout arrêter**
+Si l'application tourne dans le terminal, il faut faire Ctrl + C. Sinon, utiliser :
+
+```bash
+docker compose down
+```
+
+***Remarque*** *sur le cache des images : Si on modifie des fichiers critiques comme le requirements.txt, l'image existante risque d'être utilisée en cache. Pour forcer Docker Compose à reconstruire les images avec les nouvelles dépendances, il faut à tout prix utiliser :*
+```bash
+docker compose up --build
+```
