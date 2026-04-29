@@ -452,3 +452,27 @@ Pour qu'une application puisse "passer à l'échelle" (scalabilité), elle doit 
         * Les conteneurs communiquent automatiquement entre eux via un réseau virtuel interne.
         * Les configurations sont versionnées, reproductibles et partageables.
         * Idéal pour lancer des stacks complètes (Base de données + API + Frontend + Cache).
+  
+## 17. Introduction aux Bases de Données Distribuées et Kubernetes
+
+Spécificités des BDD Distribuées : Contrairement à une base de données relationnelle classique, les données envoyées sont des requêtes exactes (problème de polysémie, exemple de l'avocat (cf Projet TAL)).
+
+Tolérance aux pannes (systèmes distribués) : Si une panne survient au milieu du processus, elle ne doit pas impacter la recherche ou la transaction en cours. Ce mécanisme est possible car la gestion reste locale grâce à la fragmentation des données.
+
+## 18.  Exemple Pratique d'Architecture Multi-Conteneurs
+
+Pour illustrer les dépendances entre services :
+
+   - Service 1 (Backend) : Une API REST développée en Python qui renvoie une liste de produits.
+   - Service 2 (Frontend) : Une application PHP qui consomme cette API pour afficher la liste des produits.
+
+*Note : L’application PHP est ici strictement dépendante de l’API REST Python.*
+
+## 19. Sprints
+
+*N.B : À faire -> Check les vidéos de référence pour la partie dédiée à l'organisation en Sprints.*
+
+## 20. Kubernetes
+Si Docker Compose est suffisant pour notre environnement local, ce qui va véritablement permettre de créer, gérer et maintenir plusieurs conteneurs à grande échelle et en production, c’est Kubernetes.
+
+*N.B : À faire -> Check Kubernetes.*
